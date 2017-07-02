@@ -10,6 +10,9 @@ go get -u github.com/mxmCherry/taxes/cmd/taxes
 
 # Use
 
+By default (if no `--file` provided), `taxes` command tries to consume `~/.taxes/data.yaml`.
+Refer to [example.yaml](example.yaml) for example structure.
+
 ```bash
 $ taxes --file=example.yaml
 Year	QQ	Payments	Income (UAH)	   Tax (UAH)
