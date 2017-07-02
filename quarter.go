@@ -5,9 +5,9 @@ import "time"
 // Quarter holds financial year quarter.
 type Quarter struct {
 	// Year holds quarter's year.
-	Year int
+	Year int `yaml:"year"`
 	// Quarter holds quarter's number (1-based).
-	Quarter int
+	Quarter int `yaml:"quarter"`
 }
 
 // QuarterOf returns quarted of a given time.

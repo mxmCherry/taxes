@@ -1,6 +1,8 @@
 package taxes
 
-import "sort"
+import (
+	"sort"
+)
 
 // Calc is a tax calculator.
 type Calc struct {
@@ -34,15 +36,11 @@ func (c *Calc) Calc(company Company, payments []Payment) ([]Tax, error) {
 
 	taxes := make([]Tax, 0, len(byQuarter))
 	for _, t := range byQuarter {
+		sort.Sort(baseCurrencyPaymentsByDate(t.Payments))
 		taxes = append(taxes, t)
 	}
 
-	sort.Slice(taxes, func(i, j int) bool {
-		l, r := taxes[i], taxes[j]
-		return l.Quarter.Year < r.Quarter.Year && l.Quarter.Quarter < r.Quarter.Quarter
-	})
-
-	// TODO: probably, sort payments within Tax as well?
+	sort.Sort(taxesByQuarter(taxes))
 
 	return taxes, nil
 }

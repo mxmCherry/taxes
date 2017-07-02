@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-// DefaultApiAddr holds default API hostname/domain.
+// DefaultApiAddr holds default API address.
 const DefaultApiAddr = "https://bank.gov.ua"
 
 var (
