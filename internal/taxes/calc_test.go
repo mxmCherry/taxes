@@ -37,10 +37,10 @@ var _ = Describe("Calc", func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		Expect(taxes).To(Equal([]Tax{
-			Tax{
+			{
 				Quarter: Quarter{Year: 2017, Quarter: 1},
 				Payments: []BaseCurrencyPayment{
-					BaseCurrencyPayment{
+					{
 						Payment: p,
 						Rate:    26.08,
 						Amount:  2608.00, // 100.00 * 26.08
@@ -72,15 +72,15 @@ var _ = Describe("Calc", func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		Expect(taxes).To(Equal([]Tax{
-			Tax{
+			{
 				Quarter: Quarter{Year: 2017, Quarter: 1},
 				Payments: []BaseCurrencyPayment{
-					BaseCurrencyPayment{
+					{
 						Payment: p1,
 						Rate:    1,
 						Amount:  100.00,
 					},
-					BaseCurrencyPayment{
+					{
 						Payment: p2,
 						Rate:    26.08,
 						Amount:  2608.00, // 100.00 * 26.08
@@ -112,10 +112,10 @@ var _ = Describe("Calc", func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		Expect(taxes).To(Equal([]Tax{
-			Tax{
+			{
 				Quarter: Quarter{Year: 2017, Quarter: 1},
 				Payments: []BaseCurrencyPayment{
-					BaseCurrencyPayment{
+					{
 						Payment: p1,
 						Rate:    1,
 						Amount:  100.00,
@@ -124,10 +124,10 @@ var _ = Describe("Calc", func() {
 				Income: 100.00,
 				Tax:    5.00, // 100.00 * 5%
 			},
-			Tax{
+			{
 				Quarter: Quarter{Year: 2017, Quarter: 2},
 				Payments: []BaseCurrencyPayment{
-					BaseCurrencyPayment{
+					{
 						Payment: p2,
 						Rate:    26.08,
 						Amount:  2608.00, // 100.00 * 26.08
