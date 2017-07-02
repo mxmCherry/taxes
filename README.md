@@ -5,7 +5,7 @@ Commandline quarterly tax calculator for simplified Ukrainian taxation system
 # Install
 
 ```bash
-go get -u github.com/mxmCherry/taxes/cmd/taxes
+go get -u github.com/mxmCherry/taxes
 ```
 
 # Use
