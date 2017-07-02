@@ -1,3 +1,25 @@
+/*
+
+Command taxes calculates quarterly taxes from company/payments YAML file.
+
+Usage:
+
+	taxes --file=example.yaml
+
+Company/payments file example:
+
+  company:
+    base_currency: UAH
+    tax_rate:      0.05
+  payments:
+    - date:     2016-08-09T16:54:00+03:00
+      currency: USD
+      amount:   10.00
+    - date:     2016-08-10T10:33:00+03:00
+      currency: UAH
+      amount:   20.00
+
+*/
 package main
 
 import (
