@@ -4,12 +4,13 @@ package taxes
 type BaseCurrencyPayment struct {
 	// Payment holds original payment details.
 	Payment Payment `yaml:"payment"`
-	// Rate holds payment currenty to base currency exchange rate on payment date.
+	// Rate holds payment currency to base currency exchange rate on payment date.
 	Rate float64 `yaml:"rate"`
 	// Amount holds payment currency, converted to company base currency.
 	Amount float64 `yaml:"amount"`
 }
 
+// CalcBaseCurrencyPayment calculates payment amount in specified base currency.
 func CalcBaseCurrencyPayment(rates CurrencyRates, baseCurrency string, p Payment) (*BaseCurrencyPayment, error) {
 	if p.Currency == baseCurrency {
 		return &BaseCurrencyPayment{

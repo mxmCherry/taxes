@@ -32,7 +32,7 @@ func NewCurrencyRates() *CurrencyRates {
 	return NewCurrencyRatesWithAddr(DefaultApiAddr)
 }
 
-// NewCurrencyRatesWithHost constructs new currency rates client for given addr (like proto://host:port, no path).
+// NewCurrencyRatesWithAddr constructs new currency rates client for given addr (like proto://host:port, no path).
 // Mostly for testing.
 func NewCurrencyRatesWithAddr(addr string) *CurrencyRates {
 	return &CurrencyRates{
