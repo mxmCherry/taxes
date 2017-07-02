@@ -9,8 +9,8 @@ import (
 	"path/filepath"
 
 	"github.com/go-yaml/yaml"
-	"github.com/mxmCherry/taxes"
-	"github.com/mxmCherry/taxes/currencyrates/bankgovua"
+	"github.com/mxmCherry/taxes/internal/currencyrates/bankgovua"
+	"github.com/mxmCherry/taxes/internal/taxes"
 )
 
 var flags struct {

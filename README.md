@@ -11,7 +11,7 @@ go get -u github.com/mxmCherry/taxes/cmd/taxes
 # Use
 
 ```bash
-$ taxes --file=testdata/example.yaml
+$ taxes --file=example.yaml
 Year	QQ	Payments	Income (UAH)	   Tax (UAH)
 2016	Q3	       2	      268.20	       13.41
 2016	Q4	       2	      805.99	       40.30

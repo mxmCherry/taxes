@@ -3,7 +3,7 @@ package taxes_test
 import (
 	"time"
 
-	. "github.com/mxmCherry/taxes"
+	. "github.com/mxmCherry/taxes/internal/taxes"
 
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"

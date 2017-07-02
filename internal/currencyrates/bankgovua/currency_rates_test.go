@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"time"
 
-	. "github.com/mxmCherry/taxes/currencyrates/bankgovua"
+	. "github.com/mxmCherry/taxes/internal/currencyrates/bankgovua"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
