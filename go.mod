@@ -1,4 +1,4 @@
-module github.com/mxmCherry/taxes
+module github.com/mxmCherry/taxes/v2
 
 go 1.17
 

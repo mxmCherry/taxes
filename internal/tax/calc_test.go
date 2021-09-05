@@ -12,7 +12,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	"github.com/mxmCherry/taxes/internal/tax"
+	"github.com/mxmCherry/taxes/v2/internal/tax"
 )
 
 var _ = Describe("CalcRun", func() {

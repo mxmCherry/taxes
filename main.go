@@ -8,8 +8,8 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/mxmCherry/taxes/internal/bankgovua"
-	"github.com/mxmCherry/taxes/internal/tax"
+	"github.com/mxmCherry/taxes/v2/internal/bankgovua"
+	"github.com/mxmCherry/taxes/v2/internal/tax"
 	"golang.org/x/time/rate"
 	"gopkg.in/yaml.v3"
 )
