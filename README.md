@@ -15,3 +15,12 @@ go install github.com/mxmCherry/taxes@v2
 # Use
 
 TODO: finish it and rewrite doc
+
+# Migrate from previous major version ([v1](https://github.com/mxmCherry/taxes/tree/v1.0.0))
+
+```shell
+go install github.com/mxmCherry/taxes/cmd/taxes_migrate@v2
+cat ~/.taxes/data.yaml | taxes_migrate > taxes-v2.yaml
+```
+
+Double-check everything after migration as migrate helper is quick && dirty && has no automated tests.
