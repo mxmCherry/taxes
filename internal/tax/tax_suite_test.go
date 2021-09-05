@@ -1,13 +1,13 @@
-package taxes_test
+package tax_test
 
 import (
+	"testing"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-
-	"testing"
 )
 
-func TestTaxes(t *testing.T) {
+func TestTax(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Taxes Suite")
+	RunSpecs(t, "Tax Suite")
 }

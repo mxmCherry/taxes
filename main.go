@@ -1,97 +1,65 @@
-/*
-
-Command taxes calculates quarterly taxes from company/payments YAML file.
-
-Usage:
-
-	taxes --file=example.yaml
-
-Company/payments file example:
-
-  company:
-    base_currency: UAH
-    tax_rate:      0.05
-  payments:
-    - date:     2016-08-09T16:54:00+03:00
-      currency: USD
-      amount:   10.00
-    - date:     2016-08-10T10:33:00+03:00
-      currency: UAH
-      amount:   20.00
-
-*/
 package main
 
 import (
-	"flag"
+	"context"
 	"fmt"
-	"io/ioutil"
-	"math"
+	"net/http"
 	"os"
-	"path/filepath"
+	"os/signal"
+	"time"
 
-	"github.com/go-yaml/yaml"
-	"github.com/mxmCherry/taxes/internal/currencyrates/bankgovua"
-	"github.com/mxmCherry/taxes/internal/taxes"
+	"github.com/mxmCherry/taxes/internal/bankgovua"
+	"github.com/mxmCherry/taxes/internal/tax"
+	"golang.org/x/time/rate"
+	"gopkg.in/yaml.v3"
 )
 
-var flags struct {
-	file string
-}
-
-func init() {
-	defaultFilePath := filepath.Join(os.Getenv("HOME"), ".taxes/data.yaml")
-	flag.StringVar(&flags.file, "file", defaultFilePath, "Path to data YAML file")
-}
-
 func main() {
-	flag.Parse()
-	if err := run(); err != nil {
-		os.Stderr.WriteString(err.Error() + "\n")
-		os.Exit(1)
+	output := yaml.NewEncoder(os.Stdout)
+	defer output.Close()
+
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill)
+	defer cancel()
+
+	for _, filename := range os.Args[1:] {
+		if err := process(ctx, output, filename); err != nil {
+			fmt.Fprintf(os.Stderr, "ERROR: %q: %s\n", filename, err)
+			return
+		}
+		select {
+		case <-ctx.Done():
+			return
+		default:
+		}
 	}
 }
 
-func run() error {
-	dataBytes, err := ioutil.ReadFile(flags.file)
+func process(ctx context.Context, output *yaml.Encoder, filename string) error {
+	f, err := os.Open(filename)
 	if err != nil {
-		return err
+		return fmt.Errorf("open %q: %w", filename, err)
+	}
+	defer f.Close()
+
+	run := tax.CalcRun{
+		Calc: tax.Calc{
+			CurrencyRates: &bankgovua.Client{
+				HTTP:        new(http.Client),
+				RateLimiter: rate.NewLimiter(rate.Every(time.Second), 1),
+				MaxRetries:  3,
+			},
+		},
+	}
+	if err := yaml.NewDecoder(f).Decode(&run); err != nil {
+		return fmt.Errorf("decode yaml: %w", err)
 	}
 
-	var data struct {
-		Company  taxes.Company
-		Payments []taxes.Payment
-	}
-	if err := yaml.Unmarshal(dataBytes, &data); err != nil {
-		return err
+	if err := run.Run(ctx); err != nil {
+		return fmt.Errorf("tax calc: %w", err)
 	}
 
-	rates := bankgovua.NewCurrencyRates()
-	calc := taxes.NewCalc(rates)
-
-	taxes, err := calc.Calc(data.Company, data.Payments)
-	if err != nil {
-		return err
-	}
-
-	fmt.Printf(
-		"Year\tQQ\tPayments\tIncome (%s)\t   Tax (%s)\n",
-		data.Company.BaseCurrency,
-		data.Company.BaseCurrency,
-	)
-	for _, tax := range taxes {
-		fmt.Printf(
-			"%4d\tQ%1d\t% 8d\t%12.2f\t%12.2f\n",
-			tax.Quarter.Year,
-			tax.Quarter.Quarter,
-			len(tax.Payments),
-			ceil(tax.Income),
-			ceil(tax.Tax),
-		)
+	if err := output.Encode(run); err != nil {
+		return fmt.Errorf("output yaml: %w", err)
 	}
 	return nil
-}
-
-func ceil(x float64) float64 {
-	return math.Ceil(x*100) / 100
 }
