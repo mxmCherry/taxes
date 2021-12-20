@@ -25,6 +25,7 @@ For output format, refer to [test output example](internal/tax/testdata/golden-o
 Here's the data format with fields explained:
 
 ```yaml
+# taxes.yaml:
 local_currency: UAH   # input: main/local business currency
 tax_rate: "0.05"      # input: tax rate, 5%
 rounding_precision: 2 # input: round to 2 decimals after comma (to kopecks); do not specify or set to 0 to disable rounding
