@@ -1,0 +1,54 @@
+local_currency: UAH
+tax_rate: "0.05"
+rounding_precision: 2
+data:
+    - year: 2021
+      total_income: "31438.73"
+      total_tax: "1571.95"
+      quarters:
+        - quarter: 1
+          total_income: "9790.58"
+          total_tax: "489.53"
+          cumulative_income: "9790.58"
+          cumulative_tax: "489.53"
+          transactions:
+            - time: 2021-01-01T00:00:00Z
+              amount: "100.12"
+              currency: USD
+              currency_rate: "28.2746"
+              local_amount: "2830.85"
+              tax_rate: "0.05"
+              tax_amount: "141.54"
+            - time: 2021-01-01T00:00:01Z
+              amount: "200.34"
+              currency: EUR
+              currency_rate: "34.7396"
+              local_amount: "6959.73"
+              tax_rate: "0.05"
+              tax_amount: "347.99"
+        - quarter: 3
+          total_income: "21648.15"
+          total_tax: "1082.42"
+          cumulative_income: "31438.73"
+          cumulative_tax: "1571.95"
+          transactions:
+            - time: 2021-07-01T00:00:00Z
+              amount: "300.56"
+              currency: USD
+              currency_rate: "27.2275"
+              local_amount: "8183.5"
+              tax_rate: "0.05"
+              tax_amount: "409.18"
+            - time: 2021-07-01T00:00:01Z
+              amount: "400.78"
+              currency: EUR
+              currency_rate: "32.3463"
+              local_amount: "12963.75"
+              tax_rate: "0.05"
+              tax_amount: "648.19"
+            - time: 2021-07-01T00:00:01Z
+              amount: "500.9"
+              currency: UAH
+              local_amount: "500.9"
+              tax_rate: "0.05"
+              tax_amount: "25.05"

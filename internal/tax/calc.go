@@ -46,9 +46,10 @@ type CurrencyRates interface {
 }
 
 type Calc struct {
-	CurrencyRates CurrencyRates `yaml:"-"`
-	LocalCurrency string        `yaml:"local_currency,omitempty"`
-	TaxRate       *big.Float    `yaml:"tax_rate,omitempty"`
+	CurrencyRates     CurrencyRates `yaml:"-"`
+	LocalCurrency     string        `yaml:"local_currency,omitempty"`
+	TaxRate           *big.Float    `yaml:"tax_rate,omitempty"`
+	RoundingPrecision uint          `yaml:"rounding_precision,omitempty"` // 0 - no rounding, 2 - round to kopecks/cents
 }
 
 func (c *Calc) Year(ctx context.Context, y *Year) error {
@@ -63,8 +64,8 @@ func (c *Calc) Year(ctx context.Context, y *Year) error {
 			return fmt.Errorf("quarter %d: %w", q.Quarter, err)
 		}
 
-		y.TotalIncome = new(big.Float).Add(y.TotalIncome, q.TotalIncome)
-		y.TotalTax = new(big.Float).Add(y.TotalTax, q.TotalTax)
+		y.TotalIncome = c.round(new(big.Float).Add(y.TotalIncome, q.TotalIncome))
+		y.TotalTax = c.round(new(big.Float).Add(y.TotalTax, q.TotalTax))
 	}
 
 	return nil
@@ -85,11 +86,11 @@ func (c *Calc) Quarter(ctx context.Context, q *Quarter) error {
 		if err := c.Transaction(ctx, tx); err != nil {
 			return fmt.Errorf("transaction %s: %w", tx.Time, err)
 		}
-		q.TotalIncome = new(big.Float).Add(q.TotalIncome, tx.LocalAmount)
-		q.TotalTax = new(big.Float).Add(q.TotalTax, tx.TaxAmount)
+		q.TotalIncome = c.round(new(big.Float).Add(q.TotalIncome, tx.LocalAmount))
+		q.TotalTax = c.round(new(big.Float).Add(q.TotalTax, tx.TaxAmount))
 
-		q.CumulativeIncome = new(big.Float).Add(q.CumulativeIncome, tx.LocalAmount)
-		q.CumulativeTax = new(big.Float).Add(q.CumulativeTax, tx.TaxAmount)
+		q.CumulativeIncome = c.round(new(big.Float).Add(q.CumulativeIncome, tx.LocalAmount))
+		q.CumulativeTax = c.round(new(big.Float).Add(q.CumulativeTax, tx.TaxAmount))
 	}
 
 	return nil
@@ -110,7 +111,7 @@ func (c *Calc) Transaction(ctx context.Context, tx *Transaction) error {
 			}
 			tx.CurrencyRate = rate
 		}
-		tx.LocalAmount = new(big.Float).Mul(tx.Amount, tx.CurrencyRate)
+		tx.LocalAmount = c.round(new(big.Float).Mul(tx.Amount, tx.CurrencyRate))
 	}
 
 	if tx.TaxRate == nil {
@@ -118,10 +119,17 @@ func (c *Calc) Transaction(ctx context.Context, tx *Transaction) error {
 	}
 
 	if tx.TaxAmount == nil {
-		tx.TaxAmount = new(big.Float).Mul(tx.LocalAmount, tx.TaxRate)
+		tx.TaxAmount = c.round(new(big.Float).Mul(tx.LocalAmount, tx.TaxRate))
 	}
 
 	return nil
+}
+
+func (c *Calc) round(x *big.Float) *big.Float {
+	if c.RoundingPrecision == 0 {
+		return x
+	}
+	return Round(x, c.RoundingPrecision)
 }
 
 // ----------------------------------------------------------------------------

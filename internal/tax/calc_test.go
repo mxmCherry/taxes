@@ -20,7 +20,6 @@ var _ = Describe("CalcRun", func() {
 
 	BeforeEach(func() {
 		subject = new(tax.CalcRun)
-		unmarshalYAML("testdata/golden-input.yaml", subject)
 
 		subject.Calc.CurrencyRates = currencyRates{
 			"2021-01-01": {
@@ -34,13 +33,26 @@ var _ = Describe("CalcRun", func() {
 		}
 	})
 
-	It("works", func() {
+	It("calculates precisely", func() {
+		unmarshalYAML("testdata/golden-input.yaml", subject)
+
 		Expect(subject.Run(context.Background())).To(Succeed())
 
 		b, err := yaml.Marshal(subject)
 		Expect(err).NotTo(HaveOccurred())
 
 		Expect(string(b)).To(Equal(string(readFile("testdata/golden-output.yaml"))))
+	})
+
+	It("applies rounding", func() {
+		unmarshalYAML("testdata/golden-input-with-rounding.yaml", subject)
+
+		Expect(subject.Run(context.Background())).To(Succeed())
+
+		b, err := yaml.Marshal(subject)
+		Expect(err).NotTo(HaveOccurred())
+
+		Expect(string(b)).To(Equal(string(readFile("testdata/golden-output-with-rounding.yaml"))))
 	})
 })
 
