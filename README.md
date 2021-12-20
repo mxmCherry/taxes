@@ -22,7 +22,7 @@ For input file format (`taxes.yaml` file in the snippet above), refer to [test i
 
 For output format, refer to [test output example](internal/tax/testdata/golden-output-with-rounding.yaml) (pretty much the same as input, but with additional fields pulled/calculated).
 
-# Notes
+## Notes
 
 This CLI tool reads/parses YAML-encoded input file data into memory, pulls/calculates missing data (currency rates, income, tax amounts etc) and prints YAML result to STDOUT.
 
@@ -32,7 +32,9 @@ You can get used currency rates from output (same format as input, but more fiel
 v2's CLI API is significantly reduced: no more default locations etc.
 Every run requires input file to be explicitly provided as an argument.
 
-# Rounding
+It is recommended to comment out previous year data or keep each year in own file to pull currency rates less frequently: that's the slowest bit, and now this tool includes hardcoded 1 RPS rate-limiting to query [bank.gov.ua APIs](https://bank.gov.ua/ua/open-data/api-dev).
+
+## Rounding
 
 Usage input example includes rounding to 2 decimals after comma (effectively - round to kopecks/cents/...).
 Rounding is done for EACH mathematical operation on monetary data.
