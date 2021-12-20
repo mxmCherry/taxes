@@ -22,6 +22,34 @@ For input file format (`taxes.yaml` file in the snippet above), refer to [test i
 
 For output format, refer to [test output example](internal/tax/testdata/golden-output-with-rounding.yaml) (pretty much the same as input, but with additional fields pulled/calculated).
 
+Here's the data format with fields explained:
+
+```yaml
+local_currency: UAH   # input: main/local business currency
+tax_rate: "0.05"      # input: tax rate, 5%
+rounding_precision: 2 # input: round to 2 decimals after comma (to kopecks); do not specify or set to 0 to disable rounding
+data:
+    - year: 2021               # input: tax year
+      total_income: "31438.73" # output: total income amount (in local currency) for this entire year
+      total_tax:     "1571.95" # output: total tax amount (in local currency) for this entire year
+      quarters:
+        - quarter: 1                   # input: quarter index, 1..4
+          total_income: "9790.58"      # output: total income amount (in local currency) for this quarter
+          total_tax: "489.53"          # output: total tax amount (in local currency) for this quarter
+          cumulative_income: "9790.58" # output: cumulative income amount (in local currency) since the beginning of the year
+          cumulative_tax: "489.53"     # output: cumulative tax amount (in local currency) since the beginning of the year
+          transactions:
+            - time: 2021-01-01T00:00:00Z # input: transaction time/date, only date matters
+              amount: "100.12"           # input: transaction amount (possibly in foreign currency)
+              currency: USD              # input: transaction currency code (possibly foreign currency)
+              currency_rate: "28.2746"   # output (but can be input as well): bank.gov.ua's currency rate for given transaction date/currency
+              local_amount: "2830.85"    # output: transaction amount, converted to local currency (basically just `amount` * `currency_rate`)
+              tax_rate: "0.05"           # output (but can be input as well): tax rate can be overridden per transaction (for example, if business tax rate changed within the year etc)
+              tax_amount: "141.54"       # output: tax amount for this transaction (basically just `local_amount` * `tax_rate`)
+            ...
+        ...
+```
+
 ## Notes
 
 This CLI tool reads/parses YAML-encoded input file data into memory, pulls/calculates missing data (currency rates, income, tax amounts etc) and prints YAML result to STDOUT.
