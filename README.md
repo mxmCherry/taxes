@@ -14,44 +14,13 @@ go install github.com/mxmCherry/taxes@v2
 
 # Use
 
-Input should be a YAML file with the following structure:
-
-```yaml
-# taxes.yaml:
-local_currency: UAH
-tax_rate: 0.05 # 5%
-rounding_precision: 2 # decimals after comma (kopecks)
-data:
-  - year: 2021
-    quarters:
-      - quarter: 1
-        transactions:
-          - time: 2021-01-01T00:00:00Z
-            amount: 100.12
-            currency: USD
-          - time: 2021-01-01T00:00:01Z
-            amount: 200.34
-            currency: EUR
-      - quarter: 3
-        transactions:
-          - time: 2021-07-01T00:00:00Z
-            amount: 300.56
-            currency: USD
-          - time: 2021-07-01T00:00:01Z
-            amount: 400.78
-            currency: EUR
-          - time: 2021-07-01T00:00:01Z
-            amount: 500.90
-            currency: UAH
-```
-
 ```shell
-# to see result in console:
 taxes taxes.yaml
-
-# or redirect it to another file to be examined carefully:
-taxes taxes.yaml > taxes-res.yaml
 ```
+
+For input file format (`taxes.yaml` file in the snippet above), refer to [test input example](internal/tax/testdata/golden-input-with-rounding.yaml).
+
+For output format, refer to [test output example](internal/tax/testdata/golden-output-with-rounding.yaml) (pretty much the same as input, but with additional fields pulled/calculated).
 
 # Notes
 
@@ -78,6 +47,8 @@ Rounding behaviour is the usual one: `x >= 0.5` is rounded up, `x < 0.5` is roun
 
 This loss of precision can accumulate across transactions - something to keep in mind.
 But that's how most people (and banks) do monetary calculations anyway.
+
+Rounding can be disabled by not specifying it (or specifying `rounding_precision: 0`).
 
 # Migrate from previous major version ([v1](https://github.com/mxmCherry/taxes/tree/v1.0.0))
 
