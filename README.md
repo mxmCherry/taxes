@@ -56,7 +56,7 @@ Rounding can be disabled by not specifying it (or specifying `rounding_precision
 
 ```shell
 go install github.com/mxmCherry/taxes/cmd/taxes_migrate@v2
-cat ~/.taxes/data.yaml | taxes_migrate > ~/.taxes/data-v2.yaml
+cat ~/.taxes/data.yaml | taxes_migrate > taxes.yaml
 ```
 
 Double-check everything after migration as migrate helper is quick && dirty && has no automated tests.
