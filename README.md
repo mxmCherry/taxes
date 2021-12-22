@@ -20,7 +20,7 @@ taxes taxes.yaml
 
 For input file format (`taxes.yaml` file in the snippet above), refer to [test input example](internal/tax/testdata/golden-input-with-rounding.yaml).
 
-By default, it returns simplified table output with cumulative income/taxes - exactly what's used to declare income.
+By default, it returns simplified table output with cumulative income/taxes (since the beginning of the year, so Q2 already includes Q1, Q3 includes Q2 and so on) - exactly what's used to declare income.
 
 Hovewer, you can switch to much more verbose format (to trace every operation and currency rate etc) by uusing `-format` flag:
 
