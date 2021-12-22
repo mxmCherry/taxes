@@ -20,7 +20,16 @@ taxes taxes.yaml
 
 For input file format (`taxes.yaml` file in the snippet above), refer to [test input example](internal/tax/testdata/golden-input-with-rounding.yaml).
 
-For output format, refer to [test output example](internal/tax/testdata/golden-output-with-rounding.yaml) (pretty much the same as input, but with additional fields pulled/calculated).
+By default, it returns simplified table output with cumulative income/taxes - exactly what's used to declare income.
+
+Hovewer, you can switch to much more verbose format (to trace every operation and currency rate etc) by uusing `-format` flag:
+
+```shell
+taxes -format table taxes.yaml # default
+taxes -format yaml  taxes.yaml # extended yaml output, with all the possible details per transaction
+```
+
+For `-format yaml` output format, refer to [test output example](internal/tax/testdata/golden-output-with-rounding.yaml) (pretty much the same as input, but with additional fields pulled/calculated).
 
 Here's the data format with fields explained:
 
