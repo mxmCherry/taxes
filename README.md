@@ -9,7 +9,7 @@ Commandline quarterly tax calculator for simplified Ukrainian taxation system
 # Install
 
 ```bash
-go install github.com/mxmCherry/taxes@v2
+go install github.com/mxmCherry/taxes/v2
 ```
 
 # Use
@@ -84,7 +84,7 @@ Rounding can be disabled by not specifying it (or specifying `rounding_precision
 # Migrate from previous major version ([v1](https://github.com/mxmCherry/taxes/tree/v1.0.0))
 
 ```shell
-go install github.com/mxmCherry/taxes/cmd/taxes_migrate@v2
+go install github.com/mxmCherry/taxes/v2/cmd/taxes_migrate
 cat ~/.taxes/data.yaml | taxes_migrate > taxes.yaml
 ```
 
