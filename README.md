@@ -32,7 +32,7 @@ rounding_precision: 2 # input: round to 2 decimals after comma (to kopecks); do 
 data:
     - year: 2021               # input: tax year
       total_income: "31438.73" # output: total income amount (in local currency) for this entire year
-      total_tax:     "1571.95" # output: total tax amount (in local currency) for this entire year
+      total_tax: "1571.95"     # output: total tax amount (in local currency) for this entire year
       quarters:
         - quarter: 1                   # input: quarter index, 1..4
           total_income: "9790.58"      # output: total income amount (in local currency) for this quarter
