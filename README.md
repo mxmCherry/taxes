@@ -89,3 +89,11 @@ cat ~/.taxes/data.yaml | taxes_migrate > taxes.yaml
 ```
 
 Double-check everything after migration as migrate helper is quick && dirty && has no automated tests.
+
+Better keep v1 data file in case anything goes wrong.
+
+Previous version [v1](https://github.com/mxmCherry/taxes/tree/v1.0.0) can still be installed with:
+
+```shell
+go install github.com/mxmCherry/taxes@v1.0.0
+```
