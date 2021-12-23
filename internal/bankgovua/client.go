@@ -22,7 +22,12 @@ func (c *Client) Rate(ctx context.Context, at time.Time, from, to string) (float
 		return 0, errOnlyUAH
 	}
 
-	resp, err := c.get(ctx, BuildURL(at, from))
+	req, err := http.NewRequestWithContext(ctx, "GET", BuildURL(at, from), nil)
+	if err != nil {
+		return 0, fmt.Errorf("prepare request: %w", err)
+	}
+
+	resp, err := c.HTTP.Do(req)
 	if err != nil {
 		return 0, fmt.Errorf("request: %w", err)
 	}
@@ -34,13 +39,4 @@ func (c *Client) Rate(ctx context.Context, at time.Time, from, to string) (float
 	}
 
 	return ParseResponse(body)
-}
-
-func (c *Client) get(ctx context.Context, url string) (*http.Response, error) {
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
-	if err != nil {
-		return nil, fmt.Errorf("prepare request: %w", err)
-	}
-
-	return c.HTTP.Do(req)
 }
