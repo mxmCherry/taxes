@@ -18,8 +18,8 @@ func (b *Business) Validate() error {
 	if b.TaxRate <= 0 || b.TaxRate >= 1 {
 		return fmt.Errorf("tax_rate %f is invalid: should be in 0..1 range", b.TaxRate)
 	}
-	if b.RoundingPrecision <= 0 {
-		return fmt.Errorf("rounding_precision %d is invalid: should be greater than 0", b.RoundingPrecision)
+	if b.RoundingPrecision < 0 {
+		return fmt.Errorf("rounding_precision %d is invalid: should be greater or equal to 0", b.RoundingPrecision)
 	}
 	return nil
 }
