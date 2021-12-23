@@ -8,8 +8,15 @@ Commandline quarterly tax calculator for simplified Ukrainian taxation system
 
 # Installing
 
-```bash
+```shell
 go install github.com/mxmCherry/taxes/v2@latest
+```
+
+To call the binary without specifying full path, `$GOBIN` can be included in your `$PATH`:
+
+```shell
+export GOBIN=$HOME/go/bin # GOBIN defaults to ~/go/bin
+export PATH=$PATH:$GOBIN
 ```
 
 # Using
