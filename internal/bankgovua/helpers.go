@@ -23,7 +23,7 @@ func ParseResponse(p []byte) (float64, error) {
 	if len(data) != 1 {
 		return 0, fmt.Errorf("unexpected response size: %s", string(p))
 	}
-	if data[0].Rate == 0 {
+	if data[0].Rate <= 0 {
 		return 0, fmt.Errorf("no rate provided: %s", string(p))
 	}
 	return data[0].Rate, nil

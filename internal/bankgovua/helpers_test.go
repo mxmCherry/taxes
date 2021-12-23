@@ -4,6 +4,7 @@ import (
 	"time"
 
 	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 
 	. "github.com/mxmCherry/taxes/v2/internal/bankgovua"
@@ -22,6 +23,33 @@ var _ = Describe("ParseResponse", func() {
 		]`)
 		Expect(ParseResponse(raw)).To(Equal(36.2722))
 	})
+
+	DescribeTable("response validation",
+		func(raw, errStr string) {
+			_, err := ParseResponse([]byte(raw))
+			Expect(err).To(MatchError(HavePrefix(errStr)))
+		},
+		Entry("invalid JSON",
+			`INVALID`,
+			"decode JSON: ",
+		),
+		Entry("no rate returned",
+			`[]`,
+			"unexpected response size: ",
+		),
+		Entry("too many rates returned",
+			`[{}, {}]`,
+			"unexpected response size: ",
+		),
+		Entry("bad rate returned",
+			`[{"rate": -1.23}]`,
+			"no rate provided",
+		),
+		Entry("zero rate returned",
+			`[{"rate": 0}]`,
+			"no rate provided",
+		),
+	)
 })
 
 var _ = Describe("BuildURL", func() {
