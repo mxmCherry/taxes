@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"math/big"
 	"net/http"
 	"time"
 
@@ -21,9 +20,9 @@ type Client struct {
 	MaxRetries  int           // per one Rate call
 }
 
-func (c *Client) Rate(ctx context.Context, date time.Time, from, to string) (*big.Float, error) {
+func (c *Client) Rate(ctx context.Context, date time.Time, from, to string) (float64, error) {
 	if to != "UAH" {
-		return nil, errOnlyUAH
+		return 0, errOnlyUAH
 	}
 
 	url := fmt.Sprintf("https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=%s&date=%s&json",
@@ -32,28 +31,28 @@ func (c *Client) Rate(ctx context.Context, date time.Time, from, to string) (*bi
 	)
 	resp, err := c.get(ctx, url, c.MaxRetries+1)
 	if err != nil {
-		return nil, fmt.Errorf("request: %w", err)
+		return 0, fmt.Errorf("request: %w", err)
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return nil, fmt.Errorf("read response body: %w", err)
+		return 0, fmt.Errorf("read response body: %w", err)
 	}
 
 	var data []struct {
-		Rate bigFloat `json:"rate"`
+		Rate float64 `json:"rate"`
 	}
 	if err := json.Unmarshal(body, &data); err != nil {
-		return nil, fmt.Errorf("decode JSON: %w (%s)", err, string(body))
+		return 0, fmt.Errorf("decode JSON: %w (%s)", err, string(body))
 	}
 	if len(data) != 1 {
-		return nil, fmt.Errorf("unexpected response size: %s", string(body))
+		return 0, fmt.Errorf("unexpected response size: %s", string(body))
 	}
-	if data[0].Rate.Float == nil {
-		return nil, fmt.Errorf("no rate provided: %s", string(body))
+	if data[0].Rate == 0 {
+		return 0, fmt.Errorf("no rate provided: %s", string(body))
 	}
-	return data[0].Rate.Float, nil
+	return data[0].Rate, nil
 }
 
 func (c *Client) get(ctx context.Context, url string, maxTries int) (*http.Response, error) {
@@ -84,19 +83,4 @@ func (c *Client) get(ctx context.Context, url string, maxTries int) (*http.Respo
 		return nil, fmt.Errorf("read body: %w", err)
 	}
 	return nil, fmt.Errorf("unexpected response status %s: %s", resp.Status, string(body))
-}
-
-// ----------------------------------------------------------------------------
-
-type bigFloat struct {
-	*big.Float
-}
-
-func (f *bigFloat) UnmarshalJSON(p []byte) error {
-	raw, _, err := big.ParseFloat(string(p), 10, 0, big.ToNearestEven)
-	if err != nil {
-		return fmt.Errorf("unmarshal big.Float JSON: %w (%q)", err, string(p))
-	}
-	f.Float = raw
-	return nil
 }

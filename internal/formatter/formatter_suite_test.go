@@ -1,4 +1,4 @@
-package table_test
+package formatter_test
 
 import (
 	"testing"
@@ -7,7 +7,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-func TestTable(t *testing.T) {
+func TestFormatter(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Table Suite")
+	RunSpecs(t, "Formatter Suite")
 }
