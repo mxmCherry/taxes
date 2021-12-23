@@ -18,11 +18,11 @@ go install github.com/mxmCherry/taxes/v2@latest
 # works with ~/.taxes/data.yaml by default
 taxes
 
-# or file(s) can be specified explicitly
+# or file(s) can be explicitly specified
 taxes data1.yaml data2.yaml
 ```
 
-Input file must be a YAML-encoded data with following format:
+Input file must be a YAML-encoded data with the following format:
 
 ```yaml
 business:
@@ -38,9 +38,9 @@ business:
 
 Every bit of data mentioned above must be provided.
 
-Transactions must be ordered by time.
+Transactions must be ordered by time, oldest to newest.
 
-This tool returns simplified table output with cumulative income/taxes - since beginning of the year, so Q2 already includes Q1, Q3 includes Q2 and so on.
+This tool prints (STDOUT) simplified table output with cumulative income/taxes - since beginning of the year, so Q2 already includes Q1, Q3 includes Q2 and so on.
 
 ```
           Year |            QQ |        Income |           Tax |
@@ -68,11 +68,11 @@ Rounding is applied in the following cases:
 - each currency conversion, so only to non-`base_currency` transactions
 - currency rates themselves are not rounded at all
 - local-currency transactions are not rounded at all
-- rounding is applied to quarter, only in the end
+- rounding is applied to quarter, only in the end (once transaction amounts are summed)
 - quarter rounding is applied to income first
-- quarter rounding is applied to tax, using already-rounded income amount
+- and then it is applied to tax (using already-rounded income amount)
 
-Rounding behavior is the usual one: `x >= 0.5` is rounded up, `x < 0.5` is rounded down:
+Rounding behavior is the usual one: `x >= 0.5` is rounded up, `x < 0.5` is rounded down.
 
 Rounding can be disabled by not specifying it (or specifying `rounding_precision: 0`).
 
@@ -84,7 +84,7 @@ Simply rename:
 - `payments:` -> `transactions:`
 - `date:` -> `time:` (for each transaction)
 
-Previous version [v1](https://github.com/mxmCherry/taxes/tree/v1.0.0) can still be installed with:
+[v1](https://github.com/mxmCherry/taxes/tree/v1.0.0) can still be installed with:
 
 ```shell
 go install github.com/mxmCherry/taxes@v1.0.0
