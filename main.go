@@ -4,7 +4,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"net/http"
 	"os"
 	"os/signal"
 	"path/filepath"
@@ -12,8 +11,8 @@ import (
 
 	"github.com/mxmCherry/taxes/v2/internal/bankgovua"
 	"github.com/mxmCherry/taxes/v2/internal/formatter"
+	"github.com/mxmCherry/taxes/v2/internal/httpclient"
 	"github.com/mxmCherry/taxes/v2/internal/tax"
-	"golang.org/x/time/rate"
 	"gopkg.in/yaml.v3"
 )
 
@@ -27,9 +26,7 @@ func main() {
 	defer out.Close()
 
 	rates := &bankgovua.Client{
-		HTTP:        new(http.Client),
-		RateLimiter: rate.NewLimiter(rate.Every(time.Second), 1),
-		MaxRetries:  3,
+		HTTP: httpclient.New(500*time.Millisecond, 3),
 	}
 
 	filenames := flag.Args()

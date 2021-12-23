@@ -63,7 +63,7 @@ This tool prints (STDOUT) simplified table output with cumulative income/taxes -
 
 This CLI tool reads/parses YAML-encoded input file data into memory, pulls/calculates missing data (currency rates, income, tax amounts etc) and prints result to STDOUT.
 
-It is recommended to comment out previous year data or keep each year in own file to pull currency rates less frequently: that's the slowest bit, and now this tool includes hardcoded 1 RPS rate-limiting to query [bank.gov.ua APIs](https://bank.gov.ua/ua/open-data/api-dev).
+It is recommended to comment out previous year data or keep each year in own file to pull currency rates less frequently: that's the slowest bit, and now this tool includes hardcoded 2 RPS rate-limiting to query [bank.gov.ua APIs](https://bank.gov.ua/ua/open-data/api-dev).
 
 ## Rounding
 

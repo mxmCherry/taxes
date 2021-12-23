@@ -8,16 +8,14 @@ import (
 	"io/ioutil"
 	"net/http"
 	"time"
-
-	"golang.org/x/time/rate"
 )
 
 var errOnlyUAH = errors.New("only UAH target currency is supported")
 
 type Client struct {
-	HTTP        *http.Client
-	RateLimiter *rate.Limiter // rate.Every(time.Second) - allow one RPS
-	MaxRetries  int           // per one Rate call
+	HTTP interface {
+		Do(*http.Request) (*http.Response, error)
+	}
 }
 
 func (c *Client) Rate(ctx context.Context, date time.Time, from, to string) (float64, error) {
@@ -29,7 +27,7 @@ func (c *Client) Rate(ctx context.Context, date time.Time, from, to string) (flo
 		from,
 		date.Format("20060102"),
 	)
-	resp, err := c.get(ctx, url, c.MaxRetries+1)
+	resp, err := c.get(ctx, url)
 	if err != nil {
 		return 0, fmt.Errorf("request: %w", err)
 	}
@@ -55,26 +53,15 @@ func (c *Client) Rate(ctx context.Context, date time.Time, from, to string) (flo
 	return data[0].Rate, nil
 }
 
-func (c *Client) get(ctx context.Context, url string, maxTries int) (*http.Response, error) {
+func (c *Client) get(ctx context.Context, url string) (*http.Response, error) {
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("prepare request: %w", err)
 	}
 
-	c.RateLimiter.Wait(ctx)
-
-	var resp *http.Response
-	for i := 0; i < maxTries; i++ {
-		resp, err = c.HTTP.Do(req)
-		if err != nil {
-			return nil, fmt.Errorf("request failed: %w", err)
-		}
-		if resp.StatusCode == http.StatusOK {
-			return resp, nil
-		}
-		if resp.StatusCode >= 500 && resp.StatusCode <= 599 {
-			continue
-		}
+	resp, err := c.HTTP.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("request: %w", err)
 	}
 	defer resp.Body.Close()
 
