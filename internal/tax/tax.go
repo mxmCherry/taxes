@@ -9,71 +9,13 @@ import (
 
 var currencyCodeRx = regexp.MustCompile(`^[A-Z]{3}$`)
 
-type Business struct {
-	BaseCurrency      string  `yaml:"base_currency"`
-	TaxRate           float64 `yaml:"tax_rate"`
-	RoundingPrecision int     `yaml:"rounding_precision,omitempty"`
-}
-
-func (b *Business) Validate() error {
-	if b == nil {
-		return fmt.Errorf("cannot be nil")
-	}
-	if !currencyCodeRx.MatchString(b.BaseCurrency) {
-		return fmt.Errorf(`base_currency %q is invalid: should be a 3-letter ISO code, uppercased (like "UAH")`, b.BaseCurrency)
-	}
-	if b.TaxRate <= 0 || b.TaxRate >= 1 {
-		return fmt.Errorf("tax_rate %f is invalid: should be in 0..1 range", b.TaxRate)
-	}
-	if b.RoundingPrecision <= 0 {
-		return fmt.Errorf("rounding_precision %d is invalid: should be greater than 0", b.RoundingPrecision)
-	}
-	return nil
-}
-
-// ----------------------------------------------------------------------------
-
 type Transactions interface {
 	Each(func(*Transaction) error) error
 }
 
-type Transaction struct {
-	Time     time.Time `yaml:"time"`
-	Amount   float64   `yaml:"amount"`
-	Currency string    `yaml:"currency"`
-}
-
-func (t *Transaction) Validate() error {
-	if t == nil {
-		return fmt.Errorf("cannot be nil")
-	}
-	if t.Amount <= 0 {
-		return fmt.Errorf("amount %f if invalid: should be greater than 0", t.Amount)
-	}
-	if !currencyCodeRx.MatchString(t.Currency) {
-		return fmt.Errorf(`currency %q is invalid: should be a 3-letter ISO code, uppercased (like "UAH")`, t.Currency)
-	}
-	return nil
-}
-
-type TransactionSlice []*Transaction
-
-func (tt TransactionSlice) Each(cb func(*Transaction) error) error {
-	for _, t := range tt {
-		if err := cb(t); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-// ----------------------------------------------------------------------------
-
 type CurrencyRates interface {
 	Rate(ctx context.Context, at time.Time, from, to string) (float64, error)
 }
-
-// ----------------------------------------------------------------------------
 
 type Calc interface {
 	Each(context.Context, func(*Quarter) error) error
