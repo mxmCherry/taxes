@@ -13,7 +13,7 @@ import (
 
 var _ = Describe("Calc", func() {
 	It("calculates taxes", func() {
-		subject := NewCalc(
+		subject, err := NewCalc(
 			&Business{
 				BaseCurrency:      "UAH",
 				TaxRate:           0.05,
@@ -48,6 +48,7 @@ var _ = Describe("Calc", func() {
 				},
 			},
 		)
+		Expect(err).NotTo(HaveOccurred())
 
 		var res []*Quarter
 		Expect(
@@ -70,7 +71,7 @@ var _ = Describe("Calc", func() {
 	})
 
 	It("returns currency rates errors", func() {
-		subject := NewCalc(
+		subject, err := NewCalc(
 			&Business{
 				BaseCurrency:      "UAH",
 				TaxRate:           0.05,
@@ -81,11 +82,15 @@ var _ = Describe("Calc", func() {
 			},
 			currencyRates{},
 		)
-		Expect(subject.Each(context.Background(), func(*Quarter) error { return nil })).To(MatchError(HavePrefix(`get currency rate 2020-01-01 09:45:00 +0000 UTC "GBP" -> "UAH": `)))
+		Expect(err).NotTo(HaveOccurred())
+
+		Expect(
+			subject.Each(context.Background(), func(*Quarter) error { return nil }),
+		).To(MatchError(HavePrefix(`get currency rate 2020-01-01 09:45:00 +0000 UTC "GBP" -> "UAH": `)))
 	})
 
 	It("rejects unsorted TransactionSlice", func() {
-		subject := NewCalc(
+		subject, err := NewCalc(
 			&Business{
 				BaseCurrency:      "UAH",
 				TaxRate:           0.05,
@@ -103,7 +108,11 @@ var _ = Describe("Calc", func() {
 				},
 			},
 		)
-		Expect(subject.Each(context.Background(), func(*Quarter) error { return nil })).To(MatchError(`transactions are not ordered by time, {2020-01-01 09:45:00 +0000 UTC 100 GBP} should be before {2020-01-01 09:45:00.000000001 +0000 UTC 100 GBP}`))
+		Expect(err).NotTo(HaveOccurred())
+
+		Expect(
+			subject.Each(context.Background(), func(*Quarter) error { return nil }),
+		).To(MatchError(`transactions are not ordered by time, 2020-01-01 09:45:00 +0000 UTC should be before 2020-01-01 09:45:00.000000001 +0000 UTC`))
 	})
 })
 
