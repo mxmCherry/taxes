@@ -20,11 +20,11 @@ import (
 func main() {
 	flag.Parse()
 
-	out := formatter.Table(os.Stdout)
-	defer out.Close()
-
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill)
 	defer cancel()
+
+	out := formatter.Table(os.Stdout)
+	defer out.Close()
 
 	rates := &bankgovua.Client{
 		HTTP:        new(http.Client),
