@@ -16,12 +16,15 @@ type formatter struct {
 
 func New(w io.Writer) format.Formatter {
 	return &formatter{
-		tab: tabwriter.NewWriter(w, 15, 0, 0, ' ', tabwriter.AlignRight|tabwriter.Debug),
+		tab: tabwriter.NewWriter(w, 0, 0, 0, ' ', tabwriter.AlignRight|tabwriter.Debug),
 	}
 }
 
 func (f *formatter) Format(c *tax.CalcRun) error {
-	_, _ = fmt.Fprintf(f.tab, "Year \t\t Cumulative Income \t Cumulative Tax\n")
+	_, _ = fmt.Fprintf(f.tab, "Year \t\t Cumulative Income (%s) \t Cumulative Tax (%s)\n",
+		c.LocalCurrency,
+		c.LocalCurrency,
+	)
 	_, _ = fmt.Fprintf(f.tab, "\t\t\t\n")
 
 	for _, y := range c.Data {

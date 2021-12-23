@@ -1,3 +1,4 @@
+local_currency: UAH
 rounding_precision: 2
 data:
   - year: 2019
