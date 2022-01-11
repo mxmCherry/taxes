@@ -35,11 +35,11 @@ business:
   base_currency: UAH    # base/local business currency
   tax_rate: 0.05        # tax rate, 5%
   rounding_precision: 2 # round to 2 decimals after comma (to kopecks); do not specify or set to 0 to disable rounding
-  transactions:
-    - time: 2021-01-01T09:45:53Z # transaction time/date
-      amount: 100.12             # transaction amount (possibly in foreign currency)
-      currency: USD              # transaction currency code (possibly foreign currency)
-    ...
+transactions:
+  - time: 2021-01-01T09:45:53Z # transaction time/date
+    amount: 100.12             # transaction amount (possibly in foreign currency)
+    currency: USD              # transaction currency code (possibly foreign currency)
+  ...
 ```
 
 Every bit of data mentioned above must be provided.
