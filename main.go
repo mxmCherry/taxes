@@ -26,7 +26,7 @@ func main() {
 	defer out.Close()
 
 	rates := &bankgovua.Client{
-		HTTP: httpclient.New(500*time.Millisecond, 3),
+		HTTP: httpclient.New(150*time.Millisecond, 3),
 	}
 
 	filenames := flag.Args()
