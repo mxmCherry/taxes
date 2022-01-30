@@ -22,14 +22,14 @@ func Table(w io.Writer) Formatter {
 
 func (f *table) Format(biz *tax.Business, q *tax.Quarter) error {
 	if !f.headerWritten {
-		if _, err := fmt.Fprintf(f.tab, "Year \tQQ \tIncome \tTax \t\n"); err != nil {
+		if _, err := fmt.Fprintf(f.tab, "Year \tQQ \tIncome \tTax \tAnnual Income \tAnnual Tax \t\n"); err != nil {
 			return err
 		}
 		f.headerWritten = true
 	}
 
 	if q.Year != f.prevYear {
-		if _, err := fmt.Fprintf(f.tab, "\t\t\t\t\n"); err != nil {
+		if _, err := fmt.Fprintf(f.tab, "\t\t\t\t\t\t\n"); err != nil {
 			return err
 		}
 		f.prevYear = q.Year
@@ -37,20 +37,26 @@ func (f *table) Format(biz *tax.Business, q *tax.Quarter) error {
 
 	var err error
 	if biz.RoundingPrecision > 0 {
-		_, err = fmt.Fprintf(f.tab, "%d \tQ%d \t% .*f \t% .*f \t\n",
+		_, err = fmt.Fprintf(f.tab, "%d \tQ%d \t% .*f \t% .*f \t% .*f \t% .*f \t\n",
 			q.Year,
 			q.Quarter,
 			biz.RoundingPrecision,
 			q.Income,
 			biz.RoundingPrecision,
 			q.Tax,
+			biz.RoundingPrecision,
+			q.AnnualIncome,
+			biz.RoundingPrecision,
+			q.AnnualTax,
 		)
 	} else {
-		_, err = fmt.Fprintf(f.tab, "%d \tQ%d \t%f \t%f \t\n",
+		_, err = fmt.Fprintf(f.tab, "%d \tQ%d \t%f \t%f \t%f \t%f \t\n",
 			q.Year,
 			q.Quarter,
 			q.Income,
 			q.Tax,
+			q.AnnualIncome,
+			q.AnnualTax,
 		)
 	}
 	return err

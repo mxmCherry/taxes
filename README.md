@@ -46,15 +46,15 @@ Every bit of data mentioned above must be provided.
 
 Transactions must be ordered by time, oldest to newest.
 
-This tool prints (STDOUT) simplified table output with cumulative income/taxes - since beginning of the year, so Q2 already includes Q1, Q3 includes Q2 and so on.
+This tool prints (STDOUT) simplified table output with per quarter and annual (cumulative, since beginning of the year) income/taxes:
 
 ```
-          Year |            QQ |        Income |           Tax |
-               |               |               |               |
-          2020 |            Q1 |        100.00 |          5.00 |
-          2020 |            Q3 |        200.00 |         10.00 |
-               |               |               |               |
-          2021 |            Q1 |        100.12 |          5.01 |
+          Year |            QQ |        Income |           Tax | Annual Income |    Annual Tax |
+               |               |               |               |               |               |
+          2020 |            Q1 |        100.00 |          5.00 |        100.00 |          5.00 |
+          2020 |            Q3 |        200.00 |         10.00 |        300.00 |         15.00 |
+               |               |               |               |               |               |
+          2021 |            Q1 |        100.12 |          5.01 |        100.12 |          5.01 |
 ```
 
 
@@ -77,6 +77,7 @@ Rounding is applied in the following cases:
 - rounding is applied to quarter, only in the end (once transaction amounts are summed)
 - quarter rounding is applied to income first
 - and then it is applied to tax (using already-rounded income amount)
+- and then annual (cumulative) amounts are rounded as well (only to get rid of `float64` precision loss errors, doesn't affect normal (kopecks etc) precision)
 
 Rounding behavior is the usual one: `x >= 0.5` is rounded up, `x < 0.5` is rounded down.
 
