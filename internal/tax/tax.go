@@ -24,8 +24,14 @@ type Calc interface {
 type Quarter struct {
 	Year    int
 	Quarter int
-	Income  float64
-	Tax     float64
+
+	// quarter income
+	Income float64
+	Tax    float64
+
+	// cumulative income, since beginning of the year
+	CumIncome float64
+	CumTax    float64
 }
 
 // ----------------------------------------------------------------------------
@@ -55,8 +61,14 @@ func (c *calc) Each(ctx context.Context, cb func(*Quarter) error) error {
 	)
 
 	emit := func() error {
+		// round income
 		q.Income = Round(q.Income, c.business.RoundingPrecision)
+		// use rounded income to calc tax
 		q.Tax = Round(q.Income*c.business.TaxRate, c.business.RoundingPrecision)
+		// round cumulative amounts, only because of float64 precision errors (around 1E-14 or so);
+		// this doesn't affect normal precision (usually 2 decimals)
+		q.CumIncome = Round(q.CumIncome+q.Income, c.business.RoundingPrecision)
+		q.CumTax = Round(q.CumTax+q.Tax, c.business.RoundingPrecision)
 		if err := cb(q); err != nil {
 			return err
 		}
@@ -78,31 +90,39 @@ func (c *calc) Each(ctx context.Context, cb func(*Quarter) error) error {
 
 		if q != nil {
 			if txYear != q.Year {
-				// end of year - emit accumulated quarter and init fresh one
+				// end of the year
 				emit()
 				q = &Quarter{
 					Year:    txYear,
 					Quarter: txQuarter,
 					Income:  0,
 					Tax:     0,
+					// init fresh cumulative amounts
+					CumIncome: 0,
+					CumTax:    0,
 				}
 			} else if txQuarter != q.Quarter {
-				// same year, but next quarter - emit accumulated quarter and init fresh one with cumulative income/tax
+				// same year, next quarter
 				emit()
 				q = &Quarter{
 					Year:    txYear,
 					Quarter: txQuarter,
-					Income:  q.Income,
-					Tax:     q.Tax,
+					Income:  0,
+					Tax:     0,
+					// init cumulative amounts from previous quarter
+					CumIncome: q.CumIncome,
+					CumTax:    q.CumTax,
 				}
 			}
 		} else {
-			// init quarter for the first time
+			// init fresh quarter
 			q = &Quarter{
-				Year:    txYear,
-				Quarter: txQuarter,
-				Income:  0,
-				Tax:     0,
+				Year:      txYear,
+				Quarter:   txQuarter,
+				Income:    0,
+				Tax:       0,
+				CumIncome: 0,
+				CumTax:    0,
 			}
 		}
 
@@ -117,7 +137,7 @@ func (c *calc) Each(ctx context.Context, cb func(*Quarter) error) error {
 			txIncome = Round(txIncome*rate, c.business.RoundingPrecision)
 		}
 
-		// accumulate current quarter
+		// accumulate current quarter income
 		q.Income += txIncome
 
 		return nil
