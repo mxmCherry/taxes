@@ -61,16 +61,16 @@ var _ = Describe("Calc", func() {
 			// income: 100.00 * 31.0206 (3102.06) + 200.00 * 24.9196 (4983.92) = 8085.98
 			// tax: 8085.98 * 0.05 = 404.299 ~ 404.30
 			// cumulative income, tax == quarter income, tax (start of the year)
-			{Year: 2020, Quarter: 1, Income: 8085.98, Tax: 404.3, CumIncome: 8085.98, CumTax: 404.3},
+			{Year: 2020, Quarter: 1, Income: 8085.98, Tax: 404.3, AnnualIncome: 8085.98, AnnualTax: 404.3},
 			// income: 300.00 * 36.9059 = 11071.77
 			// tax: 11071.77 * 0.05 = 553.5885 ~ 553.59
 			// cumulative income: 8085.98 (Q1) + 11071.77 = 19157.75
 			// cumulative tax: 553.59 (Q1) + 404.30 = 957.89
-			{Year: 2020, Quarter: 3, Income: 11071.77, Tax: 553.59, CumIncome: 19157.75, CumTax: 957.89},
+			{Year: 2020, Quarter: 3, Income: 11071.77, Tax: 553.59, AnnualIncome: 19157.75, AnnualTax: 957.89},
 			// income: 400.00 * 36.0313 = 14412.52
 			// tax: 14412.52 * 0.05 = 720.626 ~ 720.63
 			// cumulative income, tax == quarter income, tax (start of another year)
-			{Year: 2021, Quarter: 4, Income: 14412.52, Tax: 720.63, CumIncome: 14412.52, CumTax: 720.63},
+			{Year: 2021, Quarter: 4, Income: 14412.52, Tax: 720.63, AnnualIncome: 14412.52, AnnualTax: 720.63},
 		}))
 	})
 

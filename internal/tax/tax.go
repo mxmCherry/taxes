@@ -30,8 +30,8 @@ type Quarter struct {
 	Tax    float64
 
 	// cumulative income, since beginning of the year
-	CumIncome float64
-	CumTax    float64
+	AnnualIncome float64
+	AnnualTax    float64
 }
 
 // ----------------------------------------------------------------------------
@@ -67,8 +67,8 @@ func (c *calc) Each(ctx context.Context, cb func(*Quarter) error) error {
 		q.Tax = Round(q.Income*c.business.TaxRate, c.business.RoundingPrecision)
 		// round cumulative amounts, only because of float64 precision errors (around 1E-14 or so);
 		// this doesn't affect normal precision (usually 2 decimals)
-		q.CumIncome = Round(q.CumIncome+q.Income, c.business.RoundingPrecision)
-		q.CumTax = Round(q.CumTax+q.Tax, c.business.RoundingPrecision)
+		q.AnnualIncome = Round(q.AnnualIncome+q.Income, c.business.RoundingPrecision)
+		q.AnnualTax = Round(q.AnnualTax+q.Tax, c.business.RoundingPrecision)
 		if err := cb(q); err != nil {
 			return err
 		}
@@ -98,8 +98,8 @@ func (c *calc) Each(ctx context.Context, cb func(*Quarter) error) error {
 					Income:  0,
 					Tax:     0,
 					// init fresh cumulative amounts
-					CumIncome: 0,
-					CumTax:    0,
+					AnnualIncome: 0,
+					AnnualTax:    0,
 				}
 			} else if txQuarter != q.Quarter {
 				// same year, next quarter
@@ -110,19 +110,19 @@ func (c *calc) Each(ctx context.Context, cb func(*Quarter) error) error {
 					Income:  0,
 					Tax:     0,
 					// init cumulative amounts from previous quarter
-					CumIncome: q.CumIncome,
-					CumTax:    q.CumTax,
+					AnnualIncome: q.AnnualIncome,
+					AnnualTax:    q.AnnualTax,
 				}
 			}
 		} else {
 			// init fresh quarter
 			q = &Quarter{
-				Year:      txYear,
-				Quarter:   txQuarter,
-				Income:    0,
-				Tax:       0,
-				CumIncome: 0,
-				CumTax:    0,
+				Year:         txYear,
+				Quarter:      txQuarter,
+				Income:       0,
+				Tax:          0,
+				AnnualIncome: 0,
+				AnnualTax:    0,
 			}
 		}
 

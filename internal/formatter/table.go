@@ -22,7 +22,7 @@ func Table(w io.Writer) Formatter {
 
 func (f *table) Format(biz *tax.Business, q *tax.Quarter) error {
 	if !f.headerWritten {
-		if _, err := fmt.Fprintf(f.tab, "Year \tQQ \tIncome \tTax \tCum Income \tCum Tax \t\n"); err != nil {
+		if _, err := fmt.Fprintf(f.tab, "Year \tQQ \tIncome \tTax \tAnnual Income \tAnnual Tax \t\n"); err != nil {
 			return err
 		}
 		f.headerWritten = true
@@ -45,9 +45,9 @@ func (f *table) Format(biz *tax.Business, q *tax.Quarter) error {
 			biz.RoundingPrecision,
 			q.Tax,
 			biz.RoundingPrecision,
-			q.CumIncome,
+			q.AnnualIncome,
 			biz.RoundingPrecision,
-			q.CumTax,
+			q.AnnualTax,
 		)
 	} else {
 		_, err = fmt.Fprintf(f.tab, "%d \tQ%d \t%f \t%f \t%f \t%f \t\n",
@@ -55,8 +55,8 @@ func (f *table) Format(biz *tax.Business, q *tax.Quarter) error {
 			q.Quarter,
 			q.Income,
 			q.Tax,
-			q.CumIncome,
-			q.CumTax,
+			q.AnnualIncome,
+			q.AnnualTax,
 		)
 	}
 	return err

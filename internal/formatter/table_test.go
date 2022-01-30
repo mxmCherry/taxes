@@ -18,13 +18,13 @@ var _ = Describe("Table", func() {
 		buf := bytes.NewBuffer(nil)
 		subject := Table(buf)
 
-		Expect(subject.Format(biz, &tax.Quarter{Year: 2020, Quarter: 1, Income: 100.00, Tax: 5.00, CumIncome: 100.00, CumTax: 5.00})).To(Succeed())
-		Expect(subject.Format(biz, &tax.Quarter{Year: 2020, Quarter: 3, Income: 200.00, Tax: 10.00, CumIncome: 300.00, CumTax: 15.00})).To(Succeed())
-		Expect(subject.Format(biz, &tax.Quarter{Year: 2021, Quarter: 1, Income: 10.00, Tax: 0.50, CumIncome: 10.00, CumTax: 0.50})).To(Succeed())
+		Expect(subject.Format(biz, &tax.Quarter{Year: 2020, Quarter: 1, Income: 100.00, Tax: 5.00, AnnualIncome: 100.00, AnnualTax: 5.00})).To(Succeed())
+		Expect(subject.Format(biz, &tax.Quarter{Year: 2020, Quarter: 3, Income: 200.00, Tax: 10.00, AnnualIncome: 300.00, AnnualTax: 15.00})).To(Succeed())
+		Expect(subject.Format(biz, &tax.Quarter{Year: 2021, Quarter: 1, Income: 10.00, Tax: 0.50, AnnualIncome: 10.00, AnnualTax: 0.50})).To(Succeed())
 		Expect(subject.Close()).To(Succeed())
 
 		Expect(buf.String()).To(Equal("" +
-			"          Year |            QQ |        Income |           Tax |    Cum Income |       Cum Tax |\n" +
+			"          Year |            QQ |        Income |           Tax | Annual Income |    Annual Tax |\n" +
 			"               |               |               |               |               |               |\n" +
 			"          2020 |            Q1 |        100.00 |          5.00 |        100.00 |          5.00 |\n" +
 			"          2020 |            Q3 |        200.00 |         10.00 |        300.00 |         15.00 |\n" +
