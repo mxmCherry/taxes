@@ -5,7 +5,7 @@ import (
 
 	"github.com/mxmCherry/taxes/v2/internal/tax"
 
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
 	. "github.com/mxmCherry/taxes/v2/internal/formatter"
