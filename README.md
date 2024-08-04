@@ -1,7 +1,7 @@
 # taxes
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/mxmCherry/taxes/v2.svg)](https://pkg.go.dev/github.com/mxmCherry/taxes/v2)
-[![Test](https://github.com/mxmCherry/taxes/actions/workflows/test.yml/badge.svg)](https://github.com/mxmCherry/taxes/actions/workflows/test.yml)
+[![Test](https://github.com/mxmCherry/taxes/actions/workflows/go.yml/badge.svg)](https://github.com/mxmCherry/taxes/actions/workflows/go.yml)
 
 Commandline quarterly tax calculator for simplified Ukrainian taxation system
 
